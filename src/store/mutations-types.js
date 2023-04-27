@@ -1,0 +1,10 @@
+const SET_ROLE = "SET_ROLE"
+const REMOVE_ROLE = "REMOVE_ROLE"
+const REMOVE_TOKEN = "REMOVE_TOKEN"
+
+
+export {
+  SET_ROLE,
+  REMOVE_ROLE,
+  REMOVE_TOKEN,
+}

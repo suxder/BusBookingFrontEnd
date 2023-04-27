@@ -1,0 +1,18 @@
+.el-container{
+  height: 100%;
+}
+.el-aside{
+  height: 100%;
+}
+.el-menu{
+  border-right: none;
+}
+
+
+.login-input .el-input__inner {
+  border-radius: 999px;
+}
+
+.el-input__inner:hover{
+  border-color: #39D7DA;
+}

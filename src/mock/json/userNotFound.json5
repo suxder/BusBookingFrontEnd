@@ -1,0 +1,10 @@
+{
+  "success": false,
+  "data": {
+    "id": 1,
+    "username": "123",
+    "auth": "user"
+  },
+  "errCode": null,
+  "message": "用户未注册"
+}
