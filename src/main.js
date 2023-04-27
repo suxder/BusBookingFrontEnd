@@ -29,8 +29,8 @@ Vue.use(ElementUI)
 Vue.config.productionTip = false
 axios.defaults.timeout = 5000
 
-// axios.defaults.baseURL = 'http://localhost:8090'  // mock环境下请求地址前缀
-axios.defaults.baseURL = 'http://118.190.39.221:5288'
+axios.defaults.baseURL = 'http://localhost:8090'  // mock环境下请求地址前缀
+// axios.defaults.baseURL = 'http://118.190.39.221:5288'
 
 // axios.defaults.baseURL = 'http://bookmall.natapp1.cc' //pro环境下请求地址
 // axios请求拦截

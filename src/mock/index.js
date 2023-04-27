@@ -32,7 +32,7 @@ function getJsonFile(filePath) {
 
 // eslint-disable-next-line no-cond-assign,no-constant-condition
 if (process.env.Mock = "true") {
-  app.post('/member/login',function (rep,res) {
+  app.post('/user/login',function (rep,res) {
     const {
       username,
       password
@@ -49,7 +49,7 @@ if (process.env.Mock = "true") {
       res.json(Mock.mock(json))
     }
   })
-  app.post('/member/logout',function (rep,res) {
+  app.post('/user/logout',function (rep,res) {
     let json = getJsonFile('./json/logOut.json5')
     res.json(Mock.mock(json))
   })
