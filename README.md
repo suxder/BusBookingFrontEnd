@@ -1,8 +1,8 @@
-# book_mall_frontend
+# BusBookingFrontEnd
 
 ## Description
 
-HUBU数据库课程设计火车模拟售票系统前端
+HUBU毕业设计-汽车客运在线订票系统前端
 
 ## Installation
 
