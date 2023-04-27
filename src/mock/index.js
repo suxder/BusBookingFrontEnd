@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const express = require('express')
 const bodyParser = require('body-parser')
 const Mock = require('mockjs')
@@ -11,11 +10,11 @@ const app = express()
 //配置body-parser
 //只要加入这个配置，就会在req加一个属性body
 //可以通过req.body获取post表单请求体数据
-app.use(bodyParser.urlencoded({extend:false}))
+app.use(bodyParser.urlencoded({ extend: false }))
 app.use(bodyParser.json())
 
 
-app.all('*',function (req, res, next) {
+app.all('*', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
@@ -25,34 +24,34 @@ app.all('*',function (req, res, next) {
 
 // 工具方法
 function getJsonFile(filePath) {
-  let json = fs.readFileSync(path.resolve(__dirname,filePath),'utf-8')
+  let json = fs.readFileSync(path.resolve(__dirname, filePath), 'utf-8')
   return JSON5.parse(json)
 }
 
-if (process.env.Mock === "true") {
-  app.post('/user/login',function (rep,res) {
-    const {
-      userName,
-      pwd
-    } = rep.body
+console.log(process.env);
 
-    if (userName==="user"&&pwd==="123") {
-      let json = getJsonFile('./json/userInfo.json5')
-      res.json(Mock.mock(json))
-    } else if (userName==="admin"&&pwd==="123") {
-      let json = getJsonFile('./json/adminInfo.json5')
-      res.json(Mock.mock(json))
-    } else {
-      let json = getJsonFile('./json/userNotFound.json5')
-      res.json(Mock.mock(json))
-    }
-  })
-  app.get('/user/logout',function (rep,res) {
-    let json = getJsonFile('./json/logOut.json5')
+
+app.post('/user/login', function (rep, res) {
+  const {
+    userName,
+    pwd
+  } = rep.body
+
+  if (userName === "user" && pwd === "123") {
+    let json = getJsonFile('./json/userInfo.json5')
     res.json(Mock.mock(json))
-  })
-
-}
+  } else if (userName === "admin" && pwd === "123") {
+    let json = getJsonFile('./json/adminInfo.json5')
+    res.json(Mock.mock(json))
+  } else {
+    let json = getJsonFile('./json/userNotFound.json5')
+    res.json(Mock.mock(json))
+  }
+})
+app.get('/user/logout', function (rep, res) {
+  let json = getJsonFile('./json/logOut.json5')
+  res.json(Mock.mock(json))
+})
 
 
 app.use(cors())
