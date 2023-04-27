@@ -34,14 +34,14 @@ function getJsonFile(filePath) {
 if (process.env.Mock = "true") {
   app.post('/user/login',function (rep,res) {
     const {
-      username,
-      password
+      userName,
+      pwd
     } = rep.body
 
-    if (username==="user"&&password==="123") {
+    if (userName==="user"&&pwd==="123") {
       let json = getJsonFile('./json/userInfo.json5')
       res.json(Mock.mock(json))
-    } else if (username==="admin"&&password==="123") {
+    } else if (userName==="admin"&&pwd==="123") {
       let json = getJsonFile('./json/adminInfo.json5')
       res.json(Mock.mock(json))
     } else {
@@ -49,7 +49,7 @@ if (process.env.Mock = "true") {
       res.json(Mock.mock(json))
     }
   })
-  app.post('/user/logout',function (rep,res) {
+  app.get('/user/logout',function (rep,res) {
     let json = getJsonFile('./json/logOut.json5')
     res.json(Mock.mock(json))
   })
