@@ -172,8 +172,6 @@ export default {
 //初始化开始
 //初始化结束
 //左边图片展示部分开始
-.el-aside {
-}
 .el-image {
   width: 300px;
 }
