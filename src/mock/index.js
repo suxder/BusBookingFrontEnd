@@ -29,9 +29,7 @@ function getJsonFile(filePath) {
   return JSON5.parse(json)
 }
 
-
-// eslint-disable-next-line no-cond-assign,no-constant-condition
-if (process.env.Mock = "true") {
+if (process.env.Mock === "true") {
   app.post('/user/login',function (rep,res) {
     const {
       userName,
