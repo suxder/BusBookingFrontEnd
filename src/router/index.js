@@ -2,8 +2,6 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '../store/index'
-
 
 // 解决vue-cli和vue-router版本冲突问题
 const originalPush = VueRouter.prototype.push
@@ -39,7 +37,7 @@ Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    redirect: '/login'
+    redirect: '/home'
   },
   {
     name: 'login',
@@ -63,13 +61,13 @@ const routes = [{
     redirect: '/home/train_ticket',
     component: HomeLayout,
     meta: {
-      roles: ['admin', 'user']
+      roles: ['admin', 'user', 'tourist']
     },
     children: [{
         name: 'train_ticket',
         path: 'train_ticket',
         meta: {
-          roles: ['admin', 'user']
+          roles: ['admin', 'user', 'tourist']
         },
         component: BookMall
       },
@@ -105,20 +103,20 @@ const routes = [{
     redirect: '/admin/station_management',
     component: AdminLayout,
     meta: {
-      roles: ['admin', 'finance']
+      roles: ['admin', 'super_admin']
     },
     children: [{
         name: 'station_management',
         path: 'station_management',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: StationManagement
       }, {
         name: 'train_management',
         path: 'train_management',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: TrainManagement
       },
@@ -126,7 +124,7 @@ const routes = [{
         name: 'file_management',
         path: 'file_management',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: FileManagemment
       },
@@ -134,7 +132,7 @@ const routes = [{
         name: 'sales_statistics',
         path: 'sales_statistics',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: SalesStatistics
       },
@@ -142,7 +140,7 @@ const routes = [{
         name: 'apply_for_storage',
         path: 'apply_for_storage',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: ApplyForStorage
       },
@@ -150,7 +148,7 @@ const routes = [{
         name: 'my_to_do',
         path: 'my_to_do',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: MyToDo
       },
@@ -158,7 +156,7 @@ const routes = [{
         name: 'application_record',
         path: 'application_record',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: ApplicationRecord
       },
@@ -166,7 +164,7 @@ const routes = [{
         name: 'pickup_task',
         path: 'pickup_task',
         meta: {
-          roles: ['admin', 'finance', 'manager']
+          roles: ['admin', 'super_admin']
         },
         component: PickUpTask
       }
@@ -196,7 +194,7 @@ const router = new VueRouter({
 
 // 导航守卫
 router.beforeEach((to, from, next) => {
-  const role = store.getters.getRole
+  const role = localStorage.getItem('role')
   if (to.matched.length === 0) {
     // 匹配到错误路径
     from.name ? next({
@@ -207,7 +205,7 @@ router.beforeEach((to, from, next) => {
       })
   } else {
     //  匹配到正确路径
-    if (to.path === "/login") {
+    if (to.path === "/login" || to.path === "/home") {
       next()
     } else {
       if (to.meta.roles.includes(role)) {
@@ -217,7 +215,7 @@ router.beforeEach((to, from, next) => {
           next()
         } else {
           next({
-            name: 'no_permission'
+            name: 'login'
           })
         }
       }

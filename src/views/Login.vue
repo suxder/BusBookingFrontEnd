@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="loginVue">
     <!-- 头部 -->
     <div class="header">
       <div class="wrapper">
         <div class="header-con">
-          <h1 class="logo"><a href="#">HUBU12305</a></h1>
-          <div class="header-welcome">欢迎登录12305</div>
+          <h1 class="logo"><a href="#">HUBU BusBooking</a></h1>
+          <div class="header-welcome">欢迎登录HUBU BusBooking</div>
         </div>
       </div>
     </div>
@@ -13,7 +13,7 @@
     <div class="login">
       <div class="login-slide">
         <el-image
-          style="height: 600px;width: 100%;"
+          style="height:100%;width: 100%;"
           :src="backgroundImgUrl"
           fit="cover">
         </el-image>
@@ -30,8 +30,8 @@
         :rules="loginInfoRules"
         ref="loginInfoForm"
       >
-        <el-form-item label="用户名" prop="userName">
-          <el-input v-model="loginInfo.userName" class="login-input"></el-input>
+        <el-form-item label="用户名" prop="tel">
+          <el-input v-model="loginInfo.tel" class="login-input"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
           <el-input
@@ -127,62 +127,6 @@
     </div>
     <!-- 底部 -->
     <div class="footer">
-      <div class="footer-con wrapper">
-        <div class="foot-links">
-          <h2 class="foot-con-tit">友商链接</h2>
-          <ul class="foot-links-list">
-            <li>
-              <a href="http://www.china-railway.com.cn/" title="中国国家铁路集团有限公司" aria-label="中国国家铁路集团有限公司">
-                <img style="height: 34px; width: 200px; display: block; border: 1px solid #EFEFEF;" src="https://kyfw.12306.cn/otn/resources/images/link05.png" title="中国国家铁路集团有限公司" alt="中国国家铁路集团有限公司">
-              </a>
-            </li>
-            <li>
-              <a href="http://www.china-ric.com/" title="中国铁路财产保险自保有限公司" aria-label="中国铁路财产保险自保有限公司">
-                <img style="height: 34px; width: 200px; display: block; border: 1px solid #EFEFEF;" src="https://kyfw.12306.cn/otn/resources/images/link02.png" title="中国铁路财产保险自保有限公司" alt="中国铁路财产保险自保有限公司">
-              </a>
-            </li>
-            <li>
-              <a href="http://www.95306.cn/" title="中国铁路95306网" aria-label="中国铁路95306网">
-                <img style="height: 34px; width: 200px; display: block; border: 1px solid #EFEFEF;" src="https://kyfw.12306.cn/otn/resources/images/link03.png" title="中国铁路95306网" alt="中国铁路95306网">
-              </a>
-            </li>
-            <li>
-              <a href="http://www.cre.cn/" title="中铁快运股份有限公司" aria-label="中铁快运股份有限公司">
-                <img style="height: 34px; width: 200px; display: block; border: 1px solid #EFEFEF;" src="https://kyfw.12306.cn/otn/resources/images/link04.png" title="中铁快运股份有限公司" alt="中铁快运股份有限公司">
-              </a>
-            </li>
-          </ul>
-        </div>
-        <ul class="foot-code">
-          <li style="width: 140px">
-            <h2 class="foot-con-tit">中国铁路官方微信</h2>
-            <div class="code-pic">
-              <img src="https://kyfw.12306.cn/otn/resources/images/zgtlwb.png" alt="中国铁路官方微信" title="中国铁路官方微信">
-            </div>
-          </li>
-          <li style="width: 140px">
-            <h2 class="foot-con-tit">中国铁路官方微博</h2>
-            <div class="code-pic">
-              <img src="https://kyfw.12306.cn/otn/resources/images/zgtlwx.png" alt="中国铁路官方微博" title="中国铁路官方微博">
-            </div>
-          </li>
-          <li style="width: 110px">
-            <h2 class="foot-con-tit">12306 公众号</h2>
-            <div class="code-pic">
-              <img src="https://kyfw.12306.cn/otn/resources/images/public.png" alt="12306 公众号" title="12306 公众号">
-            </div>
-          </li>
-          <li style="width: 110px">
-            <h2 class="foot-con-tit">铁路12306</h2>
-            <div class="code-pic">
-              <img src="https://kyfw.12306.cn/otn/resources/images/download.png" alt="铁路12306" title="铁路12306">
-              <div class="code-tips">
-                官方APP下载，目前铁路未授权其他网站或APP开展类似服务内容，敬请广大用户注意。
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
       <div class="footer-txt">
         <p>
           <span class="mr">版权所有©2021-2022</span>
@@ -224,13 +168,13 @@ export default {
       }
     };
     return {
-      backgroundImgUrl: require('@/assets/image/train.jpeg'),
+      backgroundImgUrl: require('@/assets/image/bus.jpg'),
       text: "向右滑动",
       loading:false,
       VabVerifyVis:false,
       loginInfo: {
         pwd: "",
-        userName: "",
+        tel: "",
       },
       registerInfo: {
         userName: "",
@@ -256,7 +200,7 @@ export default {
         ],
       },
       loginInfoRules: {
-        userName: [
+        tel: [
           {
             required: true,
             message: "请输入用户名",
@@ -298,24 +242,30 @@ export default {
               "/user/login",
               this.loginInfo
             );
-            if (data.success) {
+            const { data: res } = data;
+            console.log(res);
+            if (res.success) {
               this.$message({
                 message: "登录成功",
                 type: "success",
                 showClose: true,
                 duration: 1500,
               });
-              const role = data.data.auth;
-              const accountId = data.data.id;
-              const username = data.data.userName;
-              const pwd = data.data.pwd;
-              const tel = data.data.tel;
-              const gender = data.data.gender;
-              const identityCard = data.data.identityCard;
-              const token = data.data.token
+
+              let role = res.role;
+              if (role === 0) {
+                role = 'user'
+              } else if (role === 1) {
+                role = 'admin'
+              } else {
+                role = 'super_admin'
+              }
+              const accountID = res.id;
+              const token = res.token
               window.sessionStorage.setItem('token', token)
-              this.setRole({ role, accountId, username, pwd, tel, gender, identityCard });
-              if (role === "admin" || role === "finance" || role === "manager") {
+              this.setRole({role, accountID})
+              console.log('存储数据ing');
+              if (role === "admin" || role === "super_admin") {
                 await this.$router.replace({path: "/admin"});
               } else {
                 await this.$router.replace({path: "/home"});
@@ -387,11 +337,16 @@ export default {
 
 
 <style scoped lang="less">
+.loginVue {
+  height: 100%;
+}
+.header {
+  height: 10%;
+}
 .wrapper {
   width: 1200px;
-  padding: 0 5px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0 0.31rem;
+  margin: auto;
 }
 
 .header-con {
@@ -407,7 +362,7 @@ export default {
   }
   .logo {
     float: left;
-    margin: 15px 0 0 0;
+    margin: 1rem 0 0 0;
     padding: 0;
     a {
       text-decoration:none;
@@ -415,8 +370,7 @@ export default {
   }
   .header-welcome {
     float: left;
-    height: 80px;
-    line-height: 80px;
+    line-height: 4em;
     padding-left: 40px;
     color: #000;
     font-size: 20px;
@@ -425,11 +379,13 @@ export default {
 
 .login {
   position: relative;
-  height: 600px;
-  margin-bottom: -40px;
+  height: 79.9%;
+  .login-slide {
+    height: 100%;
+  }
   .loginSlide {
     width: 100%;
-    height: 600px;
+    height: 100%;
     position: relative;
     overflow: hidden;
   }
@@ -440,7 +396,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  // background: url("../assets/image/beijing.webp") no-repeat;
   background-size: cover;
   .login-form-wrap {
     width: 400px;
@@ -475,7 +430,6 @@ export default {
 .footer {
   box-sizing: border-box;
   background: #fff;
-  margin-top: 40px;
   &::before{
     content:"";
     display: table;

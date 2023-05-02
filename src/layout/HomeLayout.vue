@@ -50,7 +50,7 @@
               value-key="bookName"
             ></el-autocomplete>
           </div>
-          <el-dropdown class="user-info">
+          <el-dropdown class="user-info" v-if="this.operator === '游客'? false : true">
             <span class="el-dropdown-link">
               {{ operator }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -63,6 +63,9 @@
               >
             </el-dropdown-menu>
           </el-dropdown>
+          <div v-else class="tipText">
+            <span>游客</span>
+          </div>
           <div
             class="to-admin-stage"
             v-if="operator === 'admin'"
@@ -123,6 +126,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     const checkconfirmPWD = (rule, value, callback) => {
@@ -137,7 +141,7 @@ export default {
     return {
       searchVal: "",
       currRouteName: "",
-      operator: "",
+      operator: "游客",
       changeInfo: {
         oldPassword: "",
         newPassword: "",
@@ -158,24 +162,37 @@ export default {
     };
   },
   created() {
-    this.operator = localStorage.role;
+    // 该钩子函数只会在DOM重绘的时候执行
+    // 若DOM没有重绘，只是单纯的路由切换，该钩子函数不会执行
   },
   mounted() {
     this.currRouteName = this.$route.name;
+    this.getUserInfoByID();
+    this.operator = (localStorage.getItem('userName') === null ? '游客' : localStorage.getItem('userName'));
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: "SET_USERINFO",
+      setRole: "SET_ROLE"
+    }),
     // 头部点击
     handleHeaderClick(name) {
       this.$router.push({ name });
       this.currRouteName = name;
     },
-
+    // 初始化游客数据
+    initTouristInfo() {
+      const touristInfo = {
+        role: 'tourist',
+        accountID: -1
+      }
+      this.setRole(touristInfo)
+    },
     async logout() {
       try {
         const { data } = await this.$http.get("/user/logout");
-        console.log(data)
-        if (data.success) {
-          console.log(data)
+        const res = data.data;
+        if (res.success) {
           window.sessionStorage.clear()
           this.$store.commit("REMOVE_ROLE");
           this.$router.replace({
@@ -197,6 +214,31 @@ export default {
       }
     },
 
+    async getUserInfoByID() {
+      try {
+          console.log(localStorage.getItem('accountID'));
+          if (localStorage.getItem('accountID') === '-1' || localStorage.getItem('accountID') === undefined) {
+            this.initTouristInfo()
+          } else {
+              // 组织发送请求的数据
+                const userInfo = {
+                id: localStorage.getItem('accountID'),
+                type: 0
+              }
+              const { data } = await this.$http.post("user/getInfoByID", userInfo);
+              const res = data.data.userInfo;
+              this.setUserInfo(res)
+              this.operator = localStorage.getItem('userName')
+          }
+
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: err,
+          duration: 1500,
+        });
+      }
+    },
     goAdminStage() {
       const path = "/admin/station_management"
       this.$router.push({ path });
@@ -346,6 +388,14 @@ export default {
           height: 100%;
           .center;
         }
+      }
+      .tipText {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
       }
       .to-admin-stage {
         flex: 1;

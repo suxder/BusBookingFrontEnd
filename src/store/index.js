@@ -4,6 +4,9 @@ import Vuex from 'vuex'
 import {
   SET_ROLE,
   REMOVE_ROLE,
+  SET_USERINFO,
+  SET_ADMININFO,
+  SET_SUPERADMININFO
 } from './mutations-types'
 
 Vue.use(Vuex)
@@ -11,13 +14,25 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     accountInfo: {
-      role: '',
-      accountId: -1,
-      username: '',
-      pwd: '',
-      tel: '',
-      gender: '',
-      identityCard: ''
+      role: 'tourist',
+      accountID: -1,
+    },
+    userInfo: {
+      telephone: '',
+      userName: '',
+      userGender: 1,
+      userIDCard: '',
+      userEmail: '',
+      userAddress: '',
+    },
+    ptcAdminInfo: {
+      telephone: '',
+      adminName: '',
+      adminPtc: ''
+    },
+    superAdminInfo: {
+      telephone: '',
+      adminName: '',
     }
   },
   getters: {
@@ -28,37 +43,61 @@ export default new Vuex.Store({
   mutations: {
     [SET_ROLE](state, {
       role,
-      accountId,
-      username,
-      pwd,
-      tel,
-      gender,
-      identityCard
+      accountID,
     }) {
       state.accountInfo.role = role
-      state.accountInfo.accountId = accountId
-      state.accountInfo.username = username
-      state.accountInfo.pwd = pwd
-      state.accountInfo.tel = tel
-      state.accountInfo.gender = gender
-      state.accountInfo.identityCard = identityCard
+      state.accountInfo.accountId = accountID
       localStorage.setItem("role", role)
-      localStorage.setItem("accountId", accountId)
-      localStorage.setItem("username", username)
-      localStorage.setItem("pwd", pwd)
-      localStorage.setItem("tel", tel)
-      localStorage.setItem("gender", gender)
-      localStorage.setItem("identityCard", identityCard)
+      localStorage.setItem("accountID", accountID)
     },
     [REMOVE_ROLE](state) {
-      state.accountInfo.role = ''
-      state.accountInfo.accountId = -1
-      state.accountInfo.username = ''
-      state.accountInfo.pwd = ''
-      state.accountInfo.tel = ''
-      state.accountInfo.gender = ''
-      state.accountInfo.identityCard = ''
-      localStorage.clear()
+      state.accountInfo.role = 'tourist'
+      state.accountInfo.accountID = -1
+      localStorage.clear() 
+      localStorage.setItem('role', 'tourist')
+      localStorage.setItem('accountID', -1)
+    },
+    [SET_USERINFO](state , {
+      telephone,
+      userName,
+      userGender,
+      userIDCard,
+      userEmail,
+      userAddress,
+    }) {
+      state.userInfo.telephone = telephone
+      state.userInfo.userName = userName
+      state.userInfo.userGender = userGender
+      state.userInfo.userIDCard = userIDCard
+      state.userInfo.userEmail = userEmail
+      state.userInfo.userAddress = userAddress
+      localStorage.setItem('telephone', telephone)
+      localStorage.setItem('userName', userName)
+      localStorage.setItem('userGender', userGender)
+      localStorage.setItem('userIDCard', userIDCard)
+      localStorage.setItem('userEmail', userEmail)
+      localStorage.setItem('userAddress', userAddress)
+    },
+    [SET_ADMININFO](state, {
+      telephone,
+      adminName,
+      adminPtc
+    }) {
+      state.ptcAdminInfo.telephone = telephone
+      state.ptcAdminInfo.adminName = adminName
+      state.ptcAdminInfo.adminPtc = adminPtc
+      localStorage.setItem('telephone', telephone)
+      localStorage.setItem('adminName', adminName)
+      localStorage.setItem('adminPtc', adminPtc)
+    },
+    [SET_SUPERADMININFO](state, {
+      telephone,
+      adminName
+    }) {
+      state.superAdminInfo.telephone = telephone
+      state.superAdminInfo.adminName = adminName
+      localStorage.setItem('telephone', telephone)
+      localStorage.setItem('adminName', adminName)
     }
   },
 })

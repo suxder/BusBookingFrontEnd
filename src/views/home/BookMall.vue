@@ -254,7 +254,7 @@ export default {
     }
   },
   created() {
-    this.getAllTrainNums()
+    // this.getAllTrainNums()
   }
 }
 </script>

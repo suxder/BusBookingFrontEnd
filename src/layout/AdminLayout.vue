@@ -2,7 +2,7 @@
   <div id="admin-container">
     <el-container>
       <el-aside width="200px">
-        <header>HUBU12305</header>
+        <header>HUBU BusBooking</header>
         <div class="divider"></div>
         <div class="admin-info-wrap">
           <img
@@ -39,11 +39,7 @@
       </el-aside>
       <el-container>
         <el-header height="60px">
-          <div class="header-part">
-            <div class="to-book-mall" @click="goToBookMall">
-              <i class="el-icon-position"></i>
-              <span>购票首页</span>
-            </div>
+          <div class="header-part"> 
             <el-dropdown class="admin-settings">
               <span class="el-dropdown-link">
                 {{ operator }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -114,6 +110,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     const checkconfirmPWD = (rule, value, callback) => {
@@ -162,16 +159,18 @@ export default {
     };
   },
   created() {
-    this.operator = localStorage.username
     this.currPagePath = sessionStorage.getItem('currPagePath') ? sessionStorage.getItem('currPagePath') : this.$route.fullPath
     this.currPageName = sessionStorage.getItem('currPageName') ? sessionStorage.getItem('currPageName') : '销量统计'
-    // console.log(this.$route.fullPath);
   },
   mounted() {
-    // console.log(this.$route.fullPath);
+    this.getUserInfoByID()
   },
 
   methods: {
+    ...mapMutations({
+      setAdminInfo: "SET_ADMININFO",
+      setSuperAdminInfo: "SET_SUPERADMININFO"
+    }),
     handleMenuItemClick({ name,path }) {
       sessionStorage.setItem('currPageName',name)
       sessionStorage.setItem('currPagePath',path)
@@ -180,9 +179,8 @@ export default {
     async logout() {
       try {
         const { data } = await this.$http.get("/user/logout");
-        console.log(data)
-        if (data.success) {
-          console.log(data)
+        const res = data.data
+        if (res.success) {
           window.sessionStorage.clear()
           this.$store.commit("REMOVE_ROLE");
           this.$router.replace({
@@ -203,8 +201,40 @@ export default {
         });
       }
     },
-    goToBookMall() {
-      this.$router.push({ path: "/home/train_ticket" });
+    // 根据管理员的角色与ID获取管理员的信息
+    async getUserInfoByID() {
+      try {
+          if ( localStorage.getItem('role') === 'admin' ) {
+              // 组织发送请求的数据
+              const userInfo = {
+              id: localStorage.getItem('accountID'),
+              type: 1
+            }
+            const { data } = await this.$http.post("user/getInfoByID", userInfo);
+            const res = data.data.userInfo;
+            this.setAdminInfo(res)
+            this.operator = localStorage.getItem('userName')
+            this.operator = (localStorage.getItem('role') === 'super_admin' ? '超级管理员' : '客运中心管理员')
+          } else {
+              // 组织发送请求的数据
+                const userInfo = {
+                id: localStorage.getItem('accountID'),
+                type: 2
+              }
+              const { data } = await this.$http.post("user/getInfoByID", userInfo);
+              const res = data.data.userInfo;
+              this.setSuperAdminInfo(res)
+              this.operator = localStorage.getItem('userName')
+              this.operator = (localStorage.getItem('role') === 'super_admin' ? '超级管理员' : '客运中心管理员') 
+          }
+
+      } catch (err) {
+        this.$message({
+          type: "error",
+          message: err,
+          duration: 1500,
+        });
+      }
     },
     showDialog() {
       this.changePasswordDialogVis = true;
@@ -304,14 +334,6 @@ export default {
         width: 20%;
         display: flex;
         justify-content: space-around;
-        .to-book-mall {
-          flex: 1;
-          .center;
-          &:hover {
-            .hover-style;
-          }
-          font-size: 14px;
-        }
         .admin-settings {
           &:hover {
             .hover-style;
