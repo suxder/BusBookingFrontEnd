@@ -27,11 +27,7 @@
                   :key="item.id"
                   @click="handleMenuItemClick(item)"
               >
-                <i class="el-icon-menu" v-if="item.name === '经停站管理'"></i>
-                <i
-                    class="el-icon-menu"
-                    v-else-if="item.name === '车次管理'"
-                ></i>
+                <i class="el-icon-menu"></i>
                 <span>{{ item.name }}</span>
               </el-menu-item>
             </el-menu-item-group>
@@ -123,7 +119,15 @@ export default {
       }
     };
     return {
-      menuList: [
+      menuList: [],
+      superAdminMenu: [
+        {
+          id: "1",
+          name: "客运中心管理",
+          path: "/admin/ptc_admin_management",
+        }
+      ],
+      ptcAdminMenu: [
         {
           id: "1",
           name: "经停站管理",
@@ -204,6 +208,11 @@ export default {
     // 根据管理员的角色与ID获取管理员的信息
     async getUserInfoByID() {
       try {
+          if (localStorage.getItem('role') === 'super_admin') {
+              this.menuList = this.superAdminMenu
+            } else if (localStorage.getItem('role') === 'admin') {
+              this.menuList = this.ptcAdminMenu
+            }
           if ( localStorage.getItem('role') === 'admin' ) {
               // 组织发送请求的数据
               const userInfo = {
@@ -213,7 +222,6 @@ export default {
             const { data } = await this.$http.post("user/getInfoByID", userInfo);
             const res = data.data.userInfo;
             this.setAdminInfo(res)
-            this.operator = localStorage.getItem('userName')
             this.operator = (localStorage.getItem('role') === 'super_admin' ? '超级管理员' : '客运中心管理员')
           } else {
               // 组织发送请求的数据
@@ -224,7 +232,6 @@ export default {
               const { data } = await this.$http.post("user/getInfoByID", userInfo);
               const res = data.data.userInfo;
               this.setSuperAdminInfo(res)
-              this.operator = localStorage.getItem('userName')
               this.operator = (localStorage.getItem('role') === 'super_admin' ? '超级管理员' : '客运中心管理员') 
           }
 
