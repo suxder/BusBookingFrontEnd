@@ -75,7 +75,7 @@
     <el-dialog
       title="用户注册"
       :visible.sync="registerDialogVis"
-      width="25%"
+      width="30%"
       @closed="handleDialogClosed"
     >
       <el-form
@@ -87,33 +87,45 @@
         ref="registerInfoForm"
         hide-required-asterisk
       >
-        <el-form-item label="用户昵称" prop="userName">
+        <el-form-item label="电话号码" prop="telephone">
+          <el-input
+            v-model="registerInfo.telephone"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="userPwd">
+          <el-input
+            v-model="registerInfo.userPwd"
+            autocomplete="off"
+            type="password"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="身份证号" prop="userIDCard">
+          <el-input
+            v-model="registerInfo.userIDCard"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="真实姓名" prop="userName">
           <el-input
             v-model="registerInfo.userName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="gender">
-          <el-radio v-model="registerInfo.gender" label="男">男</el-radio>
-          <el-radio v-model="registerInfo.gender" label="女">女</el-radio>
+          <el-radio v-model="registerInfo.gender" label="1">男</el-radio>
+          <el-radio v-model="registerInfo.gender" label="0">女</el-radio>
         </el-form-item>
-        <el-form-item label="密码" prop="pwd">
+        <el-form-item label="邮箱" prop="userEmail">
           <el-input
-            v-model="registerInfo.pwd"
-            autocomplete="off"
-            type="password"
-            show-password
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="身份证号" prop="identityCard">
-          <el-input
-            v-model="registerInfo.identityCard"
+            v-model="registerInfo.userEmail"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="电话号" prop="tel">
+        <el-form-item label="住址" prop="userAddress">
           <el-input
-            v-model="registerInfo.tel"
+            v-model="registerInfo.userAddress"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -145,7 +157,7 @@
 
 <script>
 import { mapMutations } from "vuex";
-import { isIdentityId,isTel } from "@/views/validate";
+import { isIdentityId,isTel,isEmail } from "@/views/validate";
 import VabVerify from '../plugin/vabVerify'
 export default {
   components: { VabVerify },
@@ -167,6 +179,14 @@ export default {
         callback();
       }
     };
+    const checkEmail = (rule, value, callback) => {
+      let errorMsg = isEmail(value);
+      if (errorMsg !== "") {
+        callback(new Error(errorMsg));
+      } else {
+        callback();
+      }
+    }
     return {
       backgroundImgUrl: require('@/assets/image/bus.jpg'),
       text: "向右滑动",
@@ -177,27 +197,35 @@ export default {
         tel: "",
       },
       registerInfo: {
+        telephone: "",
         userName: "",
-        pwd: "",
-        gender: "男",
-        identityCard: "", // 默认为失信人员身份证
-        tel: null
+        userPwd: "",
+        userGender: "1",
+        userIDCard: "", // 默认为失信人员身份证
+        userEmail: "",
+        userAddress: ""
       },
       registerInfoRules: {
         userName: [
-          { required: true, message: "请输入新用户名", trigger: "blur" },
+          { required: true, message: "请输入您的真实姓名", trigger: "blur" },
           { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
-        pwd: [
+        userPwd: [
           { required: true, message: "请输入新密码", trigger: "blur" },
           { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
         ],
-        identityCard: [
+        userIDCard: [
           { validator: checkIdentitytionId , trigger: "change" }
         ],
-        tel: [
+        telephone: [
           { validator: checkMobile , trigger: "change" }
         ],
+        userEmail: [
+          { validator: checkEmail, trigger: "change"}
+        ],
+        userAddress: [
+          { required: true, message: "地址不能为空", trigger: "blur"}
+        ]
       },
       loginInfoRules: {
         tel: [
@@ -222,7 +250,6 @@ export default {
     handleLogin () {
       this.$refs.loginInfoForm.validate( (valid => {
         if  (valid) {
-          // this.VabVerifyVis = !this.VabVerifyVis
           console.log(valid)
         }
       }))
@@ -242,6 +269,7 @@ export default {
               "/user/login",
               this.loginInfo
             );
+            console.log(data);
             const { data: res } = data;
             console.log(res);
             if (res.success) {
@@ -301,19 +329,30 @@ export default {
       this.$refs["registerInfoForm"].validate(async (valid) => {
         if (valid) {
           try {
-            const { data } = await this.$http.post("/user/register", this.registerInfo);
-            console.log(data);
-            if (data.success) {
+            const { data } = await this.$http.post("/user/signup", this.registerInfo);
+            const res = data.data
+            const code = data.code
+            if (code !== 9999) {
+              if ( res.success) {
               this.$message({
                 type: "success",
                 message: "注册成功",
                 duration: 1500,
               });
               this.registerDialogVis = false;
+              this.loginInfo.tel = this.registerInfo.telephone
+              this.loginInfo.pwd = this.registerInfo.userPwd
             } else {
               this.$message({
                 type: "error",
-                message: "注册失败",
+                message: "注册失败，请重新注册",
+                duration: 1500,
+              });
+            }
+            } else {
+              this.$message({
+                type: "error",
+                message: "注册失败，该用户已存在",
                 duration: 1500,
               });
             }

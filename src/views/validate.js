@@ -84,4 +84,15 @@ export function isIdentityId(identityId) {
     return errorMsg;
   }
 
+  export function isEmail(email) {
+    var isEmailRule = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(.[a-zA-Z0-9_-]+)+$/;
+    var errorMsg = ""
+    if (email === "") {
+      errorMsg = "邮箱不能为空"
+    } else if (!isEmailRule.exec(email)) {
+      errorMsg = "你输入的邮箱长度或格式错误"
+    }
+    return errorMsg;
+  }
+
   
