@@ -2,7 +2,7 @@
   <div>
 
     <el-form :inline="true" class="queryTrains">
-      <el-form-item label="车次">
+      <el-form-item label="PTC管理员">
         <el-input v-model="trainId"></el-input>
       </el-form-item>
       <el-form-item>
@@ -16,53 +16,41 @@
     border
     v-loading="loading"
     :data="tableData"
-    :default-sort = "{prop: 'trainNumber', order: 'ascending'}"
+    :default-sort = "{prop: 'adminID', order: 'ascending'}"
     style="width: 100%;fontSize: 14px;">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="trainManager_expand">
-            <el-form-item label="列车编号">
-              <span>{{ props.row.trainNo }}</span>
+            <el-form-item label="客运中心管理员ID">
+              <span>{{ props.row.adminID }}</span>
             </el-form-item>
-            <el-form-item label="车次">
-              <span>{{ props.row.trainNumber }}</span>
+            <el-form-item label="姓名">
+              <span>{{ props.row.adminName }}</span>
             </el-form-item>
-            <el-form-item label="站点编号">
-              <span>{{ props.row.stationNo }}</span>
+            <el-form-item label="电话号码">
+              <span>{{ props.row.telephone }}</span>
             </el-form-item>
-            <el-form-item label="站点名称">
-              <span>{{ props.row.stationName }}</span>
-            </el-form-item>
-            <el-form-item label="到达时间">
-              <span>{{ props.row.arriveTime }}</span>
-            </el-form-item>
-            <el-form-item label="出发时间">
-              <span>{{ props.row.startTime }}</span>
-            </el-form-item>
-            <el-form-item label="历时">
-              <span>{{ props.row.runningTime + " 分钟"}}</span>
-            </el-form-item>
-            <el-form-item label="已经过">
-              <span>{{ props.row.startStationDistance + " 站"}}</span>
+            <el-form-item label="客运中心名称">
+              <span>{{ props.row.adminPtc }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
-        label="车次"
-        prop="trainNumber">
+        label="客运中心管理员ID"
+        prop="adminID">
       </el-table-column>
       <el-table-column
-        label="站点名称"
-        prop="stationName">
+        label="姓名"
+        prop="adminName">
       </el-table-column>
       <el-table-column
-        label="到达时间"
-        prop="arriveTime">
+        label="电话号码"
+        prop="telephone">
       </el-table-column>
       <el-table-column
-        label="出发时间"
-        prop="startTime">
+        label="客运中心名称"
+        prop="adminPtc">
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
@@ -70,7 +58,7 @@
             size="mini"
             @click="editStation(JSON.parse(JSON.stringify(scope.row)))">编辑</el-button>
           <el-popconfirm
-            title="确定删除此经停站吗？"
+            title="确定删除此管理员吗？"
             icon="el-icon-warning"
             icon-color="red"
             @confirm="deleteStation(scope.row)"
@@ -87,64 +75,35 @@
 
     <!-- 修改经停站信息 -->
     <el-dialog
-      title="编辑经停站信息"
+      title="编辑客运中心管理员信息"
       :visible.sync="infoDialogVis"
-      width="40%"
+      width="30%"
       center
     >
       <el-form
-        :model="trainInfo"
+        :model="ptcAdminInfo"
         class="train-form"
         label-width="130px"
         label-position="left"
         size="medium"
         hide-required-asterisk
       >
-        <el-form-item label="列车编号" prop="trainNo">
+        <el-form-item label="客运中心管理员ID" prop="adminID">
           <el-input
-            v-model="trainInfo.trainNo"
+            v-model="ptcAdminInfo.adminID"
+            autocomplete="off"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="电话号码" prop="telephone">
+          <el-input
+            v-model="ptcAdminInfo.telephone"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="车次" prop="trainNumber">
+         <el-form-item label="客运中心名称" prop="adminPtc">
           <el-input
-            v-model="trainInfo.trainNumber"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="站点编号" prop="stationNo">
-          <el-input
-            v-model="trainInfo.stationNo"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-         <el-form-item label="站点名称" prop="stationName">
-          <el-input
-            v-model="trainInfo.stationName"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="到达时间" prop="arriveTime">
-          <el-input
-            v-model="trainInfo.arriveTime"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="出发时间" prop="startTime">
-          <el-input
-            v-model="trainInfo.startTime"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="历时(分)" prop="runningTime">
-          <el-input
-            v-model="trainInfo.runningTime"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="与首站相距(站)" prop="startStationDistance">
-          <el-input
-            v-model="trainInfo.startStationDistance"
+            v-model="ptcAdminInfo.adminPtc"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -156,69 +115,41 @@
     </el-dialog>
 
     <el-dialog
-      title="添加经停站"
+      title="添加客运中心管理员"
       :visible.sync="addDialogVis"
-      width="40%"
+      width="30%"
       center
     >
       <el-form
-        :model="addTrainInfo"
+        :model="addPtcAdminInfo"
         class="train-form"
         label-width="130px"
         label-position="left"
         size="medium"
         hide-required-asterisk
       >
-        <el-form-item label="列车编号" prop="trainNo">
-          <el-select v-model="selectedTrain" value-key="trainNo" placeholder="请选择">
-            <el-option
-              v-for="item in trainsArray"
-              :key="item.trainNo"
-              :label="item.trainNo"
-              :value="item">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车次" prop="trainNumber">
+        <el-form-item label="电话号码" prop="telephone">
           <el-input
-            v-model="addTrainInfo.trainNumber"
-            autocomplete="off"
-            :disabled="true"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="站点编号" prop="stationNo">
-          <el-input
-            v-model="addTrainInfo.stationNo"
+            v-model="addPtcAdminInfo.telephone"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-         <el-form-item label="站点名称" prop="stationName">
+        <el-form-item label="密码" prop="adminPwd">
           <el-input
-            v-model="addTrainInfo.stationName"
+            v-model="addPtcAdminInfo.adminPwd"
+            type="password"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="到达时间" prop="arriveTime">
+        <el-form-item label="姓名" prop="adminName">
           <el-input
-            v-model="addTrainInfo.arriveTime"
+            v-model="addPtcAdminInfo.adminName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="出发时间" prop="startTime">
+         <el-form-item label="客运中心名称" prop="adminPtc">
           <el-input
-            v-model="addTrainInfo.startTime"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="历时(分)" prop="runningTime">
-          <el-input
-            v-model="addTrainInfo.runningTime"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="与首站相距(站)" prop="startStationDistance">
-          <el-input
-            v-model="addTrainInfo.startStationDistance"
+            v-model="addPtcAdminInfo.adminPtc"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -237,25 +168,17 @@
 export default {
   data() {
     return {
-      trainsArray: [],
-      selectedTrain: {
-        trainNo: '',
-        trainNumber: ''
-      },
+      // 表格数据加载flag变量
       loading: true,
       tableData: [],
       infoDialogVis: false,
       addDialogVis: false,
-      trainInfo: {},
-      addTrainInfo: {
-        arriveTime: "",
-        runningTime: null,
-        startStationDistance: null,
-        startTime: "",
-        stationName: "",
-        stationNo: "",
-        trainNo: "",
-        trainNumber: ""
+      ptcAdminInfo: {},
+      addPtcAdminInfo: {
+        telephone: "",
+        adminName: "",
+        adminPwd: "",
+        adminPtc: ""
       },
       trainId: ""
     }
@@ -273,60 +196,29 @@ export default {
   },
 
   methods: {
-    // 将一个车次的所有数据添加到tableData，不能使用forEach
-    getOneTrain(train) {   
-      this.$http
-        .get('/admin/queryParkStationByTrainNumber', { params: { trainNumber: train.trainNumber } })
-        .then(response => {
-          if (response.data.success) {
-            const { data } = response.data
-            for(let i = 0; i < data.length; i++) {
-              this.tableData.push(data[i])
-            }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-
-    // 获取全部车次的详细信息
-    async getInfo () {
-      // 获取全部车次
-      var allTrains = []
-      this.tableData.splice(0,this.tableData.length)
-      this.trainsArray.splice(0,this.trainsArray.length)
+    // 获取全部PTC管理员的详细信息
+    async getAllPtcAdminInfo () {
       this.loading = true
       await this.$http
-          .get('/train/queryAllTrainNoPage')
+          .get('/superAdmin/queryAllPtcAdmin')
           .then(response => {
-            if (response.data.success) {
-              response.data.data.forEach(function(item) {
-                let train = {
-                  trainNo: '',
-                  trainNumber: ''
-                }
-                train.trainNo = item.trainNo
-                train.trainNumber = item.trainNumber
-                allTrains.push(train)
-              })
+            const { data:res } = response.data
+            if (res.success) {
+              this.tableData = res.ptcAdminList
+              console.log(this.tableData);
             }
           })
           .catch(function (error) {
             console.log(error);
           });
-      // 循环将所有车次详细信息push到tableData
-      for(let i = 0; i < allTrains.length; i++) {
-        this.getOneTrain(allTrains[i])
-        this.trainsArray.push(allTrains[i])
-      }
       this.loading = false
     },
 
     // 打开修改经停站对话框并传递选中经停站信息
     editStation(info) {
       this.infoDialogVis = true;
-      this.trainInfo = info;
+      this.ptcAdminInfo = info;
+      console.log(info);
     },
 
     // 打开添加经停站对话框
@@ -397,18 +289,19 @@ export default {
     // 确认添加经停站
     async handleAddDialogConfirm() {
       await this.$http
-        .post('/admin/saveParkStation', this.addTrainInfo)
+        .post('/superAdmin/createPtcAdmin', this.addPtcAdminInfo)
         .then(response => {
-          if (response.data.success) {
-            this.$message({
+          const { data:res } = response.data
+            if (res.success) {
+              this.$message({
               message: "添加成功!",
               type: "success",
               showClose: true,
               duration: 1500,
             });
-            this.getInfo()
+            this.getAllPtcAdminInfo()
             this.addDialogVis = false
-          } else {
+            } else {
             this.$message({
               message: `添加失败!`,
               type: "error",
@@ -416,7 +309,6 @@ export default {
               duration: 1500,
             });
           }
-          
         })
         .catch(function (error) {
           console.log(error)
@@ -443,7 +335,7 @@ export default {
   },
 
   async created() {
-    this.getInfo()
+    this.getAllPtcAdminInfo()
   }
 }
 </script>
@@ -464,11 +356,10 @@ export default {
   
 
 .train-form {
-  width: 80%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-
 }
 </style>
