@@ -32,7 +32,8 @@ const PickUpTask = () => import('../views/admin/PickUpTask')
 const SuperAdminManagement = () => import('../views/admin/PtcAdminManagement')
 const Settlement = () => import('../views/admin/Settlement')
 const DataVisualization = () => import('../views/admin/DataVisualization')
-
+const CarManagement = () => import('../views/admin/CarManagement')
+const RouteManagement = () => import('../views/admin/RouteManagement')
 
 
 
@@ -131,6 +132,14 @@ const routes = [{
         roles: ['super_admin', 'admin']
       },
       component: DataVisualization
+    },
+    {
+      name: 'car_management',
+      path: 'car_management',
+      meta: {
+        roles: ['admin']
+      },
+      component: CarManagement
     },
     {
       name: 'station_management',
@@ -238,11 +247,13 @@ router.beforeEach((to, from, next) => {
       if (to.meta.roles.includes(role)) {
         next()
       } else {
-        if (to.path === '/no_permission') {
-          next()
-        } else {
+        if (role === "tourist") {
           next({
             name: 'login'
+          })
+        } else {
+          next({
+            name: 'no_permission'
           })
         }
       }

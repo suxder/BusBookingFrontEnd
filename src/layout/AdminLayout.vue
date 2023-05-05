@@ -140,14 +140,19 @@ export default {
       ptcAdminMenu: [
         {
           id: "1",
+          name: "车辆管理",
+          path: "/admin/car_management",
+        },
+        {
+          id: "2",
           name: "结算",
           path: "/admin/settlement",
         },
         {
-          id: "2",
+          id: "3",
           name: "数据可视化",
           path: "/admin/data_visualization",
-        }
+        },
       ],
       currPageName: "",
       role: localStorage.role,
