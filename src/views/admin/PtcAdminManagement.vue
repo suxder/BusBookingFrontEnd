@@ -73,7 +73,7 @@
       </el-table-column>
     </el-table>
 
-    <!-- 修改经停站信息 -->
+    <!-- 修改PTC管理员信息 -->
     <el-dialog
       title="编辑客运中心管理员信息"
       :visible.sync="infoDialogVis"
@@ -98,6 +98,12 @@
         <el-form-item label="电话号码" prop="telephone">
           <el-input
             v-model="ptcAdminInfo.telephone"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="adminName">
+          <el-input
+            v-model="ptcAdminInfo.adminName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -218,7 +224,6 @@ export default {
     editStation(info) {
       this.infoDialogVis = true;
       this.ptcAdminInfo = info;
-      console.log(info);
     },
 
     // 打开添加经停站对话框
@@ -261,16 +266,22 @@ export default {
     // 确认修改经停站信息
     async handleDialogConfirm() {
       await this.$http
-        .post('/admin/updateParkStation', this.trainInfo)
+        .post('/superAdmin/updatePtcAdmin', {
+          id: this.ptcAdminInfo.adminID,
+          telephone: this.ptcAdminInfo.telephone,
+          adminName: this.ptcAdminInfo.adminName,
+          adminPtc: this.ptcAdminInfo.adminPtc
+        })
         .then(response =>  {
-          if (response.data.success) {
+          const { data:res } = response.data
+          if (res.success) {
             this.$message({
               message: "编辑成功!",
               type: "success",
               showClose: true,
               duration: 1500,
             });
-            this.getInfo()
+            this.getAllPtcAdminInfo()
             this.infoDialogVis = false
           } else {
             this.$message({
