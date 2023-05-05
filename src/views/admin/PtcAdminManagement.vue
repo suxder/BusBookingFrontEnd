@@ -3,7 +3,7 @@
 
     <el-form :inline="true" class="queryTrains">
       <el-form-item label="PTC管理员">
-        <el-input v-model="trainId"></el-input>
+        <el-input v-model="ptcAdminID"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -186,7 +186,7 @@ export default {
         adminPwd: "",
         adminPtc: ""
       },
-      trainId: ""
+      ptcAdminID: ""
     }
   },
 
@@ -338,9 +338,13 @@ export default {
 
     // 查询对应车次下所有经停站
     onSubmit() {
-      this.tableData = this.tableData.filter(o => {
-        return this.trainId === o.trainNumber
+      if (this.ptcAdminID !== "") {
+        this.tableData = this.tableData.filter(o => {
+        return this.ptcAdminID == o.adminID; 
       })
+      } else {
+        this.getAllPtcAdminInfo()
+      }
     },
 
   },
