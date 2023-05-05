@@ -30,6 +30,8 @@ const MyToDo = () => import('../views/admin/MyToDo')
 const ApplicationRecord = () => import('../views/admin/ApplicationRecord')
 const PickUpTask = () => import('../views/admin/PickUpTask')
 const SuperAdminManagement = () => import('../views/admin/PtcAdminManagement')
+const Settlement = () => import('../views/admin/Settlement')
+const DataVisualization = () => import('../views/admin/DataVisualization')
 
 
 
@@ -113,6 +115,22 @@ const routes = [{
         roles: ['super_admin']
       },
       component: SuperAdminManagement
+    },
+    {
+      name: 'settlement',
+      path: 'settlement',
+      meta: {
+        roles: ['super_admin', 'admin']
+      },
+      component: Settlement
+    },
+    {
+      name: 'data_visualization',
+      path: 'data_visualization',
+      meta: {
+        roles: ['super_admin', 'admin']
+      },
+      component: DataVisualization
     },
     {
       name: 'station_management',

@@ -125,18 +125,28 @@ export default {
           id: "1",
           name: "客运中心管理",
           path: "/admin/ptc_admin_management",
+        },
+        {
+          id: "2",
+          name: "结算",
+          path: "/admin/settlement",
+        },
+        {
+          id: "3",
+          name: "数据可视化",
+          path: "/admin/data_visualization",
         }
       ],
       ptcAdminMenu: [
         {
           id: "1",
-          name: "经停站管理",
-          path: "/admin/station_management",
+          name: "结算",
+          path: "/admin/settlement",
         },
         {
           id: "2",
-          name: "车次管理",
-          path: "/admin/train_management",
+          name: "数据可视化",
+          path: "/admin/data_visualization",
         }
       ],
       currPageName: "",
@@ -164,7 +174,7 @@ export default {
   },
   created() {
     this.currPagePath = sessionStorage.getItem('currPagePath') ? sessionStorage.getItem('currPagePath') : this.$route.fullPath
-    this.currPageName = sessionStorage.getItem('currPageName') ? sessionStorage.getItem('currPageName') : '销量统计'
+    this.currPageName = sessionStorage.getItem('currPageName') ? sessionStorage.getItem('currPageName') : '管理员中心'
   },
   mounted() {
     this.getUserInfoByID()
